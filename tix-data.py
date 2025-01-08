@@ -19,16 +19,22 @@ if uploaded_file:
     st.write("### Data Preview")
     st.dataframe(df.head())  # Display the first 5 rows of the DataFrame
 
+    # Total number of tickets sold
+    total_tickets_sold = df['Qty'].sum()
+    st.write(f"### Total Tickets Sold: {total_tickets_sold}")
+
+    # Calculate min and max prices per section
+    price_stats = df.groupby('Section')['Price'].agg(['min', 'max']).reset_index()
+    st.write("### Min and Max Prices Per Section")
+    st.dataframe(price_stats)
+
     # Set Seaborn and Matplotlib styles
     sns.set_style("darkgrid")
     plt.style.use("dark_background")
 
+    # Filter top sections by ticket count
     top_sections = df['Section'].value_counts().nlargest(10).index  # Top 10 sections
     df_top = df[df['Section'].isin(top_sections)]
-
-    
-
-
 
     # Plot 1: Number of tickets sold per section
     st.write("## Number of Tickets Sold Per Section")
