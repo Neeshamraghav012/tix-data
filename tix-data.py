@@ -95,20 +95,30 @@ if uploaded_file:
     plt.xticks(rotation=45)
     st.pyplot(fig5)
 
-    # Plot: Time Series of Price Over Time by Zone
-    st.write("## Price Over Time by Zone")
+    # Plot: Separate Time Series of Price Over Time for Each Zone (with different colors)
+    st.write("## Price Over Time for Each Zone")
 
     if 'Zone' in df.columns:
-        # Filter to top zones to avoid clutter
-        top_zones = df['Zone'].value_counts().nlargest(5).index  # Change number if needed
+        import itertools
+        # Define a list of distinct colors (extend if you have more zones)
+        color_list = sns.color_palette("Set2", n_colors=10)
+        color_cycle = itertools.cycle(color_list)  # Create a cycle of colors
+
+        # Filter to top zones to avoid too many graphs
+        top_zones = df['Zone'].value_counts().nlargest(5).index
         df_zone_time = df[df['Zone'].isin(top_zones)]
 
-        fig7, ax7 = plt.subplots(figsize=(14, 6))
-        sns.lineplot(data=df_zone_time, x='Date/Time (EDT)', y='Price', hue='Zone', ax=ax7)
-        ax7.set_title("Price Over Time by Top Zones")
-        ax7.legend(title="Zone", loc="upper right")
-        plt.xticks(rotation=45)
-        st.pyplot(fig7)
+        for zone in top_zones:
+            st.write(f"### Zone: {zone}")
+            zone_df = df_zone_time[df_zone_time['Zone'] == zone]
+
+            fig, ax = plt.subplots(figsize=(14, 5))
+            color = next(color_cycle)  # Get next color for each plot
+            sns.lineplot(data=zone_df, x='Date/Time (EDT)', y='Price', ax=ax, color=color)
+            ax.set_title(f"Price Over Time - {zone}")
+            plt.xticks(rotation=45)
+            st.pyplot(fig)
+
     else:
         st.warning("Zone column not found in the uploaded data.")
 
