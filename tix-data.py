@@ -85,6 +85,29 @@ if uploaded_file:
 
     # Sort by datetime before rolling
     df = df.sort_values(by='Date/Time (EDT)')
+
+
+    # Plot: Number of Tickets Sold Over Time (Grouped by Date)
+    st.write("## Number of Tickets Sold Per Day")
+
+    # Ensure Date/Time column is in datetime format
+    df['Date/Time (EDT)'] = pd.to_datetime(df['Date/Time (EDT)'])
+
+    # Create a new column for just the date (not time)
+    df['Date'] = df['Date/Time (EDT)'].dt.date
+
+    # Group by Date and sum the Qty (number of tickets)
+    tickets_per_day = df.groupby('Date')['Qty'].sum().reset_index()
+
+    # Plot the line chart
+    fig, ax = plt.subplots(figsize=(14, 5))
+    sns.lineplot(data=tickets_per_day, x='Date', y='Qty', marker='o', ax=ax)
+    ax.set_title("Number of Tickets Sold Per Day")
+    ax.set_xlabel("Date")
+    ax.set_ylabel("Tickets Sold")
+    plt.xticks(rotation=45)
+    st.pyplot(fig)
+
    
 
     # Plot 5: Average Price Over Time (with smoothing)
@@ -94,6 +117,17 @@ if uploaded_file:
     sns.lineplot(x="Date/Time (EDT)", y="Smoothed_Price", data=df, ax=ax5)
     plt.xticks(rotation=45)
     st.pyplot(fig5)
+
+    st.write("## Price Distribution")
+    fig, ax = plt.subplots(figsize=(10, 5))
+    sns.histplot(df['Price'], kde=True, ax=ax)
+    ax.set_title("Histogram of Ticket Prices")
+    st.pyplot(fig)
+
+    # Show skewness value
+    skew_value = df['Price'].skew()
+    st.write(f"Skewness of Price: {skew_value:.2f}")
+
 
     # Plot: Separate Time Series of Price Over Time for Each Zone (with different colors)
     st.write("## Price Over Time for Each Zone")
