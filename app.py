@@ -6,12 +6,13 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 # --- Streamlit Page Config ---
-st.set_page_config(page_title="🎟️ Ticku Dashboard", layout="wide")
+st.set_page_config(page_title="🎟️ Tickoo Dashboard", layout="wide")
+
 
 # --- Title and Description ---
-st.title("🎟️ Ticku Analytics Dashboard")
+st.title("🎟️ Tickoo Analytics Dashboard")
 st.markdown("""
-Welcome to **Ticku**, your smart ticket analytics dashboard!  
+Welcome to **Tickoo**, your smart ticket analytics dashboard!  
 Upload your CSV file below to explore sales insights, price trends, and section-wise analytics — all interactively.
 """)
 
@@ -27,7 +28,7 @@ if uploaded_file:
     df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
 
     # Remove rows where Qty or Price is zero or NaN
-    df = df[(df['Qty'] > 0) & (df['Price'].notna())]
+    # df = df[(df['Qty'] > 0) & (df['Price'].notna())]
 
     # --- Remove Outliers from Price only ---
     Q1 = df['Price'].quantile(0.25)
