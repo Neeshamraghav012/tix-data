@@ -20,6 +20,7 @@ Upload your CSV file below to explore sales insights, price trends, and section-
 uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
 
 if uploaded_file:
+
     # Read the uploaded file
     df = pd.read_csv(uploaded_file)
 
@@ -28,7 +29,7 @@ if uploaded_file:
     df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
 
     # Remove rows where Qty or Price is zero or NaN
-    # df = df[(df['Qty'] > 0) & (df['Price'].notna())]
+    df = df[(df['Qty'] > 0) & (df['Price'].notna())]
 
     # --- Remove Outliers from Price only ---
     Q1 = df['Price'].quantile(0.25)
