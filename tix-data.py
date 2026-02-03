@@ -245,48 +245,8 @@ if uploaded_file:
         ]['Qty'].sum()
 
 
-    st.markdown("## 📊 Tickets Sold: Presale vs General Sale")
-
-    sales_phase_df = pd.DataFrame({
-        "Sale Phase": ["Presale", "General Sale"],
-        "Tickets Sold": [presale_sold, general_sale_sold]
-    })
-
-    fig, ax = plt.subplots(figsize=(8, 5))
-    sns.barplot(
-        data=sales_phase_df,
-        x="Sale Phase",
-        y="Tickets Sold",
-        ax=ax
-    )
-
-    ax.set_title("Tickets Sold by Sales Phase")
-    ax.set_ylabel("Tickets Sold")
-    ax.set_xlabel("")
-
-    for i, v in enumerate(sales_phase_df["Tickets Sold"]):
-        ax.text(i, v, f"{int(v):,}", ha="center", va="bottom")
-
-    st.pyplot(fig)
-
-    total_sold = presale_sold + general_sale_sold
-
-    col1, col2 = st.columns(2)
-
-    col1.metric(
-        "🎟️ Presale Tickets Sold",
-        f"{int(presale_sold):,}",
-        f"{(presale_sold / total_sold * 100):.1f}%" if total_sold > 0 else None
-    )
-
-    col2.metric(
-        "🛒 General Sale Tickets Sold",
-        f"{int(general_sale_sold):,}",
-        f"{(general_sale_sold / total_sold * 100):.1f}%" if total_sold > 0 else None
-    )
-
-
     # Plot 5: Average Price Over Time (with smoothing)
+
     st.write("## Average Price Over Time")
     df['Smoothed_Price'] = df['Price'].rolling(window=5).mean()
     fig5, ax5 = plt.subplots(figsize=(12, 6))
