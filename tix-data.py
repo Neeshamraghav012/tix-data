@@ -112,9 +112,10 @@ if uploaded_file:
     st.markdown("## 📊 Key Performance Indicators")
     col1, col2, col3 = st.columns(3)
 
-    total_tickets = int(df['Qty'].sum())
-    avg_price = round(df['Price'].mean(), 2)
-    highest_price = round(df['Price'].max(), 2)
+    # Use filtered_df instead of df
+    total_tickets = int(filtered_df['Qty'].sum())
+    avg_price = round(filtered_df['Price'].mean(), 2) if not filtered_df.empty else 0
+    highest_price = round(filtered_df['Price'].max(), 2) if not filtered_df.empty else 0
 
     with col1:
         st.metric("🎫 Total Tickets Sold", f"{total_tickets:,}")
