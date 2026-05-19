@@ -107,10 +107,31 @@ if uploaded_file:
     # Show number of rows in filtered data
     st.markdown(f"**Number of rows in filtered data:** {len(filtered_df):,}")
 
+    # --- Tickets Sold Today ---
+    today_date = datetime.now().date()
+
+    today_tickets = int(
+        filtered_df[filtered_df['Date'] == today_date]['Qty'].sum()
+    )
+
+    # --- Tickets Sold Last Day (Previous Date) ---
+    tickets_last_day = 0
+
+    available_dates = sorted(filtered_df['Date'].dropna().unique())
+
+    # Remove today from available dates
+    previous_dates = [d for d in available_dates if d < today_date]
+
+    if previous_dates:
+        last_day_date = max(previous_dates)
+
+        tickets_last_day = int(
+            filtered_df[filtered_df['Date'] == last_day_date]['Qty'].sum()
+        )
 
     # --- KPIs Section ---
     st.markdown("## 📊 Key Performance Indicators")
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4, col5 = st.columns(5)
 
     # Use filtered_df instead of df
     total_tickets = int(filtered_df['Qty'].sum())
@@ -123,6 +144,10 @@ if uploaded_file:
         st.metric("💰 Average Ticket Price", f"${avg_price:,.0f}")
     with col3:
         st.metric("🏆 Highest Ticket Price", f"${highest_price:,.0f}")
+    with col4:
+        st.metric("📅 Tickets Sold (Last Day)", f"{tickets_last_day:,}")
+    with col5:
+        st.metric("🟢 Tickets Sold Today", f"{today_tickets:,}")
 
 
     
